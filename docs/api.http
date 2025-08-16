@@ -1,0 +1,59 @@
+### Health
+GET http://localhost:8080/health
+
+### Create timesheet
+POST http://localhost:8080/timesheets
+Content-Type: application/json
+
+{
+  "employee_name": "Arif Hidayat",
+  "department": "IT",
+  "month": 7,
+  "year": 2025,
+  "total_working_days": 25
+}
+
+### List timesheets
+GET http://localhost:8080/timesheets?employee_name=Arif%20Hidayat&month=7&year=2025
+
+### Get timesheet by id
+GET http://localhost:8080/timesheets/1
+
+### Update timesheet
+PUT http://localhost:8080/timesheets/1
+Content-Type: application/json
+
+{
+  "employee_name": "Arif Hidayat",
+  "department": "IT",
+  "month": 7,
+  "year": 2025,
+  "total_working_days": 24
+}
+
+### Add entry
+POST http://localhost:8080/timesheets/1/entries
+Content-Type: application/json
+
+{
+  "date": "2025-07-01",
+  "start_time": "08.00",
+  "end_time": "17:00",
+  "total_hours": 8.00,
+  "overtime_hours": 0.00,
+  "remarks": "CRUD"
+}
+
+### Update entry
+PUT http://localhost:8080/timesheets/1/entries/1
+Content-Type: application/json
+
+{
+  "date": "2025-07-01",
+  "start_time": "08:30",
+  "end_time": "17:30",
+  "remarks": "Revisi"
+}
+
+### Delete entry
+DELETE http://localhost:8080/timesheets/1/entries/1

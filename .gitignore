@@ -1,0 +1,65 @@
+# — OS & Editor cruft —
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.swp
+*~
+
+# — Go build artifacts & binaries —
+/bin/
+dist/
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.o
+*.a
+
+# Binaries yang mungkin terbuild
+timesheet-api
+cmd/api/api
+
+# — Coverage & profiling —
+coverage/
+coverage.out
+coverage.xml
+*.cover
+*.cov
+*.prof
+*.pprof
+profile.out
+cpu.prof
+mem.prof
+block.prof
+
+# — Logs & cache —
+*.log
+logs/
+.cache/
+.gocache/
+.golangci-lint-cache/
+
+# — Env & secrets —
+.env
+.env.*
+!.env.example
+
+# — Docker/Compose local data —
+docker-compose.override.yml
+pgdata/
+postgres-data/
+db-data/
+
+# — Optional: Node —
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# — Optional: vendoring —
+# vendor/
