@@ -1,23 +1,37 @@
-version: "3.9"
 services:
   db:
     image: postgres:16
+    container_name: timesheet-db
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: timesheetdb
+      # Opsional: simpan data di lokasi default di dalam container
+      # PGDATA: /var/lib/postgresql/data
     ports:
       - "5432:5432"
     volumes:
-      - ./../pgdata:/var/lib/postgresql/data
+      # Simpan data DB di host (relative ke file ini → ../pgdata)
+      - ../pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d timesheetdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   app:
+    container_name: timesheet-api
     build:
       context: ..
       dockerfile: build/Dockerfile
     environment:
       PORT: 8080
       DB_DSN: postgres://user:password@db:5432/timesheetdb?sslmode=disable
+      TZ: Asia/Jakarta
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: unless-stopped

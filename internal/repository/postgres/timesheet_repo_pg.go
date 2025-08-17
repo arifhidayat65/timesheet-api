@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"strings"
@@ -49,7 +48,7 @@ func (r *TimesheetRepoPG) FindByID(id int64) (*domain.Timesheet, error) {
 	}
 
 	rows, err := r.DB.Query(`SELECT id, work_date, start_time, end_time, total_hours, overtime_hours, remarks, created_at
-	                         FROM timesheet_entries WHERE timesheet_id=$1 ORDER BY work_date ASC`, id)
+	                         FROM timesheet_entries WHERE timesheet_id = $1 ORDER BY work_date ASC`, id)
 	if err != nil { return nil, err }
 	defer rows.Close()
 
@@ -142,13 +141,19 @@ func (r *TimesheetRepoPG) DeleteEntry(id int64) error {
 	return nil
 }
 
-// Optional: transaction template for future batch ops
-func (r *TimesheetRepoPG) withTx(ctx context.Context, fn func(*sql.Tx) error) error {
-	tx, err := r.DB.BeginTx(ctx, nil)
-	if err != nil { return err }
-	if err := fn(tx); err != nil {
-		_ = tx.Rollback()
-		return err
+func (r *TimesheetRepoPG) Stats(timesheetID int64) (int64, float64, float64, error) {
+	q := `
+	  SELECT
+	    COUNT(*) FILTER (WHERE total_hours IS NOT NULL OR start_time IS NOT NULL OR end_time IS NOT NULL) AS days_filled,
+	    COALESCE(SUM(total_hours), 0)   AS total_hours,
+	    COALESCE(SUM(overtime_hours),0) AS overtime_hours
+	  FROM timesheet_entries
+	  WHERE timesheet_id = $1
+	`
+	var days int64
+	var th, oh float64
+	if err := r.DB.QueryRow(q, timesheetID).Scan(&days, &th, &oh); err != nil {
+		return 0, 0, 0, err
 	}
-	return tx.Commit()
+	return days, th, oh, nil
 }

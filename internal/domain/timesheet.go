@@ -6,26 +6,26 @@ import (
 )
 
 type Timesheet struct {
-	ID               int64
-	EmployeeName     string
-	Department       string
-	Month            int
-	Year             int
-	TotalWorkingDays *int
-	CreatedAt        time.Time
-	Entries          []TimesheetEntry
+	ID               int64            `json:"id"`
+	EmployeeName     string           `json:"employee_name"`
+	Department       string           `json:"department"`
+	Month            int              `json:"month"`
+	Year             int              `json:"year"`
+	TotalWorkingDays *int             `json:"total_working_days,omitempty"`
+	CreatedAt        time.Time        `json:"created_at"`
+	Entries          []TimesheetEntry `json:"entries,omitempty"`
 }
 
 type TimesheetEntry struct {
-	ID            int64
-	TimesheetID   int64
-	WorkDate      time.Time
-	StartTime     *time.Time
-	EndTime       *time.Time
-	TotalHours    *float64
-	OvertimeHours *float64
-	Remarks       string
-	CreatedAt     time.Time
+	ID            int64      `json:"id"`
+	TimesheetID   int64      `json:"timesheet_id"`
+	WorkDate      time.Time  `json:"date"`
+	StartTime     *time.Time `json:"start_time,omitempty"`
+	EndTime       *time.Time `json:"end_time,omitempty"`
+	TotalHours    *float64   `json:"total_hours,omitempty"`
+	OvertimeHours *float64   `json:"overtime_hours,omitempty"`
+	Remarks       string     `json:"remarks,omitempty"`
+	CreatedAt     time.Time  `json:"created_at"`
 }
 
 var (
